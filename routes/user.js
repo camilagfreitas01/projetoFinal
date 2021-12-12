@@ -33,6 +33,8 @@ router.get('/getUser/:userEmail', async (req, res) => {
             res.json(user)
         }else{
             res.status(201)
+            res.json({message: 'usuario inexistente'})
+
         }
         
     } catch (err) {
