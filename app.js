@@ -13,12 +13,15 @@ app.use(bodyParser.json())
 //import routes
 
 const userRoute = require('./routes/user')
+const wineRoute = require('./routes/wine')
 
 app.use('/user', userRoute)
+app.use('/wine', wineRoute)
 
 
 
 //CONNECT TO DB
 mongoose.connect(process.env.DB_CONNECTION, () => console.log('connected to db'))
 
+app.listen(3000)
 module.exports = app
