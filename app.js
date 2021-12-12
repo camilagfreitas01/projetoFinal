@@ -21,4 +21,4 @@ app.use('/user', userRoute)
 //CONNECT TO DB
 mongoose.connect(process.env.DB_CONNECTION, () => console.log('connected to db'))
 
-app.listen(3000)
+module.exports = app
