@@ -29,7 +29,12 @@ router.get('/getUser/:userEmail', async (req, res) => {
     try {
         
         const user = await User.find({ email: req.params.userEmail})
-        res.json(user)
+        if(user.length != 0){
+            res.json(user)
+        }else{
+            res.status(201)
+        }
+        
     } catch (err) {
         res.json({ message: err })
     }
