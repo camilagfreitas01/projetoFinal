@@ -3,8 +3,25 @@ const { redirect } = require('express/lib/response')
 const { find } = require('../models/Wine')
 const router = express.Router()
 const Wine = require('../models/Wine')
+const multer = require ('multer')
 
-router.post('/registerWine', async (req, res) => {
+const storage = multer.diskStorage({
+    destination:function (req, file, callback){
+        callback(null, './uploads')
+    },
+    filename:function(req,file,callback){
+        callback(null, Date.now() + file.originalname)
+    }
+})
+const upload = multer ({
+    storage:storage,
+    limits:{
+        fieldSize: 1024*1024*3,
+    },
+})
+
+router.post('/registerWine', upload.single('image'), async (req, res) => {
+    
     const wine = new Wine({
         email: req.body.email,
         productName: req.body.productName,
@@ -12,7 +29,8 @@ router.post('/registerWine', async (req, res) => {
         wineType: req.body.wineType,
         grapeType: req.body.grapeType,
         harmonizing: req.body.harmonizing,
-        price: req.body.price
+        price: req.body.price,
+        image : req.file.filename
     })
 
     try {
@@ -231,6 +249,24 @@ router.get('/getReviewByAuthor/:email', async (req, res) => {
     } catch (err) {
         res.status(204)
         res.json({ message: 'Não existe reviews desse autor' })
+    }
+})
+
+router.get('/getWineByPrice', async (req, res) => {
+    try {
+        const wine = await Wine.find({ price: { $gte:req.body.priceMin, $lte: req.body.priceMax }})
+console.log(wine)
+        if (wine.length != 0) {
+            res.status(200)
+            res.json(wine)
+        } else {
+            res.status(204)
+            res.json({ message: 'Não existe vinho nesse valor' })
+        }
+
+    } catch (err) {
+        res.status(204)
+        res.json({ message: 'Não existe vinho nesse valor' })
     }
 })
 

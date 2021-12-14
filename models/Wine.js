@@ -46,12 +46,16 @@ const WineSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    image: {
+        type: String,
+        required: true
+    },
     harmonizing: {
         type: Array,
         required: false
     },
     price: {
-        type: String,
+        type: Number,
         required: true
     },
     rating: {

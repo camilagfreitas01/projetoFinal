@@ -4,11 +4,13 @@ const mongoose = require ('mongoose')
 const bodyParser = require ('body-parser')
 const cors = require ('cors')
 require ('dotenv/config')
+const multer = require('multer')
 
 //Middlewares
 app.use(cors())
 app.use(express())
 app.use(bodyParser.json())
+const upload = multer({dest:"uploads/"})
 
 //import routes
 
