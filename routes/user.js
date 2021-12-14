@@ -47,9 +47,11 @@ router.delete('/deleteUser/:userEmail', async (req, res) => {
         const removedUser = await User.deleteOne({ email: req.params.userEmail,
             password:req.body.password })
             if(removedUser.deletedCount != 0){
+                res.status(200)
                 res.json(removedUser)
             }else{
-                res.json({ message: 'não foi possivel deletar' })
+                res.status(422)
+                res.json({ message: 'Não foi possivel deletar' })
             }
         
     } catch (err) {

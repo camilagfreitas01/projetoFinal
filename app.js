@@ -15,6 +15,7 @@ app.use(bodyParser.json())
 const userRoute = require('./routes/user')
 const wineRoute = require('./routes/wine')
 
+
 app.use('/user', userRoute)
 app.use('/wine', wineRoute)
 

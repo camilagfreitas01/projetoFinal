@@ -1,6 +1,34 @@
-const mongoose =  require('mongoose')
+const mongoose = require('mongoose')
+
+
+const ReviewSchema = mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    productName: {
+        type: String,
+        required: true
+    },
+    review: {
+        type: String,
+        required: false
+    },
+    stars: {
+        type: Number,
+        required: true
+    }
+})
 
 const WineSchema = mongoose.Schema({
+    email: {
+        type: String,
+        requires: true
+    },
     productName: {
         type: String,
         requires: true,
@@ -14,18 +42,24 @@ const WineSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    grapeType:{
+    grapeType: {
         type: String,
         required: true
     },
-    harmonizing:{
+    harmonizing: {
         type: Array,
         required: false
     },
-    price:{
-        type: Number,
+    price: {
+        type: String,
         required: true
-    }
+    },
+    rating: {
+        type: Number,
+        required: true,
+        default: 0,
+    },
+    review: [ReviewSchema]
 })
 
 module.exports = mongoose.model('Wine', WineSchema)
