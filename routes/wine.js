@@ -173,7 +173,7 @@ router.get('/getWineByHarmonizing/:harmonizing', async (req, res) => {
     }
 })
 
-router.get('/getWineByStar', async (req, res) => {
+router.post('/getWineByStar', async (req, res) => {
     try {
         const stars = req.body.stars
         console.log(stars)
