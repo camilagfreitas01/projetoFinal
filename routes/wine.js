@@ -3,25 +3,26 @@ const { redirect } = require('express/lib/response')
 const { find } = require('../models/Wine')
 const router = express.Router()
 const Wine = require('../models/Wine')
-const multer = require ('multer')
+const multer = require('multer')
 
 const storage = multer.diskStorage({
-    destination:function (req, file, callback){
+    destination: function (req, file, callback) {
         callback(null, './uploads')
     },
-    filename:function(req,file,callback){
+    filename: function (req, file, callback) {
         callback(null, Date.now() + file.originalname)
     }
 })
-const upload = multer ({
-    storage:storage,
-    limits:{
-        fieldSize: 1024*1024*3,
+const upload = multer({
+    storage: storage,
+    limits: {
+        fieldSize: 1024 * 1024 * 3,
     },
 })
 
-router.post('/registerWine', upload.single('image'), async (req, res) => {
-    
+router.post('/registerWine', async (req, res) => {
+    // router.post('/registerWine', upload.single('image'), async (req, res) => {
+
     const wine = new Wine({
         email: req.body.email,
         productName: req.body.productName,
@@ -30,7 +31,8 @@ router.post('/registerWine', upload.single('image'), async (req, res) => {
         grapeType: req.body.grapeType,
         harmonizing: req.body.harmonizing,
         price: req.body.price,
-        image : req.file.filename
+        image: req.body.image,
+        vinicula: req.body.vinicula
     })
 
     try {
@@ -192,7 +194,8 @@ router.get('/getWineByStar', async (req, res) => {
 router.post('/addReview/:productName', async (req, res) => {
     try {
         const wine = await Wine.find({ productName: req.params.productName })
-        var stars = 0
+        var stars = []
+        var rating = 0
         if (wine) {
             const review = {
                 name: req.body.name,
@@ -203,9 +206,14 @@ router.post('/addReview/:productName', async (req, res) => {
             }
 
             wine.map((values) => {
-                stars = values.review.reduce((acc, item) => item.stars + acc, 0) / values.review.length
+                values.review.map((singleReview) => {
+                    stars.push(singleReview.stars)
+                }
+                )
+                // stars.push(values.review.stars)
+                rating = values.review.reduce((acc, item) => item.stars + acc, 0) / values.review.length
             })
-
+            console.log(rating)
             await Wine.updateOne(
                 { productName: req.params.productName },
                 {
@@ -213,7 +221,7 @@ router.post('/addReview/:productName', async (req, res) => {
                         review: review,
                     },
                     $set: {
-                        rating: Number(stars)
+                        rating: Number(rating)
                     }
                 }
             )
@@ -252,10 +260,30 @@ router.get('/getReviewByAuthor/:email', async (req, res) => {
     }
 })
 
+router.get('/getWineByAuthor/:email', async (req, res) => {
+    try {
+        const wine = await Wine.find({ "email": req.params.email })
+
+        if (wine.length != 0) {
+            res.status(200)
+            res.json(wine)
+        } else {
+            res.status(204)
+            res.json({
+                status: 204,
+                message: 'Não existem vinhos desse autor'
+            })
+        }
+
+    } catch (err) {
+        res.status(204)
+        res.json({ message: 'Não existem vinhos desse autor' })
+    }
+})
+
 router.get('/getWineByPrice', async (req, res) => {
     try {
-        const wine = await Wine.find({ price: { $gte:req.body.priceMin, $lte: req.body.priceMax }})
-console.log(wine)
+        const wine = await Wine.find({ price: { $gte: req.body.priceMin, $lte: req.body.priceMax } })
         if (wine.length != 0) {
             res.status(200)
             res.json(wine)

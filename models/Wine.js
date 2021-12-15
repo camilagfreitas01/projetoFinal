@@ -38,6 +38,10 @@ const WineSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    vinicula:{
+        type: String,
+        required: true
+    },
     wineType: {
         type: String,
         required: true

@@ -25,15 +25,18 @@ router.post('/register', async (req, res) => {
     }
 })
 
-router.get('/getUser/:userEmail', async (req, res) => {
+router.post('/getUser/:userEmail', async (req, res) => {
     try {
         
-        const user = await User.find({ email: req.params.userEmail})
+        const user = await User.find({ email: req.params.userEmail,
+            password:req.body.password})
         if(user.length != 0){
             res.json(user)
         }else{
             res.status(201)
-            res.json({message: 'usuario inexistente'})
+            res.json({
+                status: 201,
+                message: 'usuario inexistente'})
 
         }
         
