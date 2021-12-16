@@ -1,6 +1,10 @@
 const express = require('express')
-const { redirect } = require('express/lib/response')
-const { find } = require('../models/Wine')
+const {
+    redirect
+} = require('express/lib/response')
+const {
+    find
+} = require('../models/Wine')
 const router = express.Router()
 const Wine = require('../models/Wine')
 const multer = require('multer')
@@ -39,11 +43,12 @@ router.post('/registerWine', async (req, res) => {
         const savedWine = await wine.save()
         res.status(200)
         res.json(savedWine)
-    }
-    catch (err) {
+    } catch (err) {
         if (err.code == 11000) {
             res.status(409)
-            res.json({ message: 'Vinho já cadastrado' })
+            res.json({
+                message: 'Vinho já cadastrado'
+            })
         } else {
             res.status(400).send(err.message)
         }
@@ -54,36 +59,41 @@ router.post('/registerWine', async (req, res) => {
 
 router.delete('/deleteWine/:productName', async (req, res) => {
     try {
-        const removedWine = await Wine.deleteOne({ productName: req.params.productName })
+        const removedWine = await Wine.deleteOne({
+            productName: req.params.productName
+        })
         res.json(removedWine)
     } catch (err) {
-        res.json({ message: 'Não foi possivel deletar' })
+        res.json({
+            message: 'Não foi possivel deletar'
+        })
     }
 })
 
 router.patch('/updateWine/:productName', async (req, res) => {
 
     try {
-        const updatedWine = await Wine.updateOne(
-            { productName: req.params.productName },
-            {
-                $set: {
-                    originCountry: req.body.originCountry,
-                    wineType: req.body.wineType,
-                    grapeType: req.body.grapeType,
-                    price: req.body.price
-                },
-                $push: {
-                    harmonizing: req.body.harmonizing,
-                }
-            }, {
+        const updatedWine = await Wine.updateOne({
+            productName: req.params.productName
+        }, {
+            $set: {
+                originCountry: req.body.originCountry,
+                wineType: req.body.wineType,
+                grapeType: req.body.grapeType,
+                price: req.body.price
+            },
+            $push: {
+                harmonizing: req.body.harmonizing,
+            }
+        }, {
             multi: true
-        }
-        )
+        })
         res.json(updatedWine)
     } catch (err) {
         res.status(400)
-        res.json({ message: err })
+        res.json({
+            message: err
+        })
     }
 })
 
@@ -92,84 +102,114 @@ router.get('/getAllWines', async (req, res) => {
         const wine = await Wine.find({})
         res.json(wine)
     } catch (err) {
-        res.json({ message: err })
+        res.json({
+            message: err
+        })
     }
 })
 
 router.get('/getWineByName/:productName', async (req, res) => {
     try {
-        const wine = await Wine.find({ productName: req.params.productName })
+        const wine = await Wine.find({
+            productName: req.params.productName
+        })
         res.json(wine)
     } catch (err) {
-        res.json({ message: err })
+        res.json({
+            message: err
+        })
     }
 })
 
 router.get('/getWineByOrigin/:originCountry', async (req, res) => {
     try {
-        const wine = await Wine.find({ originCountry: req.params.originCountry })
+        const wine = await Wine.find({
+            originCountry: req.params.originCountry
+        })
         if (wine.length != 0) {
             res.status(200)
             res.json(wine)
         } else {
             res.status(204)
-            res.json({ message: 'Não existem vinhos desse local' })
+            res.json({
+                message: 'Não existem vinhos desse local'
+            })
 
         }
 
     } catch (err) {
-        res.json({ message: err })
+        res.json({
+            message: err
+        })
     }
 })
 
 router.get('/getWineByType/:wineType', async (req, res) => {
     try {
-        const wine = await Wine.find({ wineType: req.params.wineType })
+        const wine = await Wine.find({
+            wineType: req.params.wineType
+        })
 
         if (wine.length != 0) {
             res.status(200)
             res.json(wine)
         } else {
             res.status(204)
-            res.json({ message: 'Não existem vinhos desse tipo' })
+            res.json({
+                message: 'Não existem vinhos desse tipo'
+            })
         }
 
     } catch (err) {
-        res.json({ message: err })
+        res.json({
+            message: err
+        })
     }
 })
 
 router.get('/getWineByGrapeType/:grapeType', async (req, res) => {
     try {
-        const wine = await Wine.find({ grapeType: req.params.grapeType })
+        const wine = await Wine.find({
+            grapeType: req.params.grapeType
+        })
 
         if (wine.length != 0) {
             res.status(200)
             res.json(wine)
         } else {
             res.status(204)
-            res.json({ message: 'Não existem vinhos com uvas desse tipo' })
+            res.json({
+                message: 'Não existem vinhos com uvas desse tipo'
+            })
         }
 
     } catch (err) {
-        res.json({ message: err })
+        res.json({
+            message: err
+        })
     }
 })
 
 router.get('/getWineByHarmonizing/:harmonizing', async (req, res) => {
     try {
-        const wine = await Wine.find({ harmonizing: req.params.harmonizing })
+        const wine = await Wine.find({
+            harmonizing: req.params.harmonizing
+        })
 
         if (wine.length != 0) {
             res.status(200)
             res.json(wine)
         } else {
             res.status(204)
-            res.json({ message: 'Não existem vinhos que harmonizam com essa comida' })
+            res.json({
+                message: 'Não existem vinhos que harmonizam com essa comida'
+            })
         }
 
     } catch (err) {
-        res.json({ message: err })
+        res.json({
+            message: err
+        })
     }
 })
 
@@ -183,19 +223,27 @@ router.post('/getWineByStar', async (req, res) => {
             res.json(wine)
         } else {
             res.status(204)
-            res.json({ message: 'Não existem vinhos com essa classificação' })
+            res.json({
+                message: 'Não existem vinhos com essa classificação'
+            })
         }
 
     } catch (err) {
-        res.json({ message: err })
+        res.json({
+            message: err
+        })
     }
 })
 
 router.post('/addReview/:productName', async (req, res) => {
     try {
-        const wine = await Wine.find({ productName: req.params.productName })
+        const wine = await Wine.find({
+            productName: req.params.productName
+        })
+       
         var stars = []
         var rating = 0
+        var possible = false
         if (wine) {
             const review = {
                 name: req.body.name,
@@ -204,41 +252,68 @@ router.post('/addReview/:productName', async (req, res) => {
                 review: req.body.review,
                 stars: req.body.stars
             }
-
+            
+            
             wine.map((values) => {
+                console.log(values.review)
                 values.review.map((singleReview) => {
-                    stars.push(singleReview.stars)
-                }
-                )
-                // stars.push(values.review.stars)
-                rating = values.review.reduce((acc, item) => item.stars + acc, 0) / values.review.length
-            })
-            console.log(rating)
-            await Wine.updateOne(
-                { productName: req.params.productName },
-                {
-                    $push: {
-                        review: review,
-                    },
-                    $set: {
-                        rating: Number(rating)
+                    if(singleReview.length != 0){
+                        stars.push(singleReview.stars)
+                        possible=true
                     }
+                    else{
+                        stars.push(review.stars)
+                    }
+                })
+                 
+                // stars.push(values.review.stars)
+                if(possible == true){
+                    var media = 0
+                    stars.map((valor)=>{
+                        media = media + valor
+                    })
+                    rating = ((media+review.stars)/(values.review.length+2))
+                }else{
+                    rating = review.stars
                 }
-            )
-            res.status(200).json({ message: 'Review adicionado com sucesso' })
+               
+            })
+          
+            var finalRating = parseInt(rating)
+            console.log(finalRating)
+            await Wine.updateOne({
+                productName: req.params.productName
+            }, {
+                $push: {
+                    review: review,
+                },
+                $set: {
+                    rating: finalRating
+                }
+            })
+            res.status(200).json({
+                message: 'Review adicionado com sucesso'
+            })
         } else {
             res.status(404)
-            res.json({ message: 'Vinho não encontrado' })
+            res.json({
+                message: 'Vinho não encontrado'
+            })
         }
     } catch (err) {
+        console.log(err)
         res.status(404)
-        res.json({ message: err })
+        res.json({
+            message: err
+        })
     }
 })
 
 router.get('/getReviewByAuthor/:email', async (req, res) => {
     try {
-        const wine = await Wine.findOne({ "review.email": req.params.email })
+        const wine = await Wine.findOne({
+            "review.email": req.params.email
+        })
 
         if (wine.length != 0) {
             const reviews = []
@@ -251,18 +326,24 @@ router.get('/getReviewByAuthor/:email', async (req, res) => {
             res.json(reviews)
         } else {
             res.status(204)
-            res.json({ message: 'Não existe reviews desse autor' })
+            res.json({
+                message: 'Não existe reviews desse autor'
+            })
         }
 
     } catch (err) {
         res.status(204)
-        res.json({ message: 'Não existe reviews desse autor' })
+        res.json({
+            message: 'Não existe reviews desse autor'
+        })
     }
 })
 
 router.get('/getWineByAuthor/:email', async (req, res) => {
     try {
-        const wine = await Wine.find({ "email": req.params.email })
+        const wine = await Wine.find({
+            "email": req.params.email
+        })
 
         if (wine.length != 0) {
             res.status(200)
@@ -277,24 +358,35 @@ router.get('/getWineByAuthor/:email', async (req, res) => {
 
     } catch (err) {
         res.status(204)
-        res.json({ message: 'Não existem vinhos desse autor' })
+        res.json({
+            message: 'Não existem vinhos desse autor'
+        })
     }
 })
 
 router.get('/getWineByPrice', async (req, res) => {
     try {
-        const wine = await Wine.find({ price: { $gte: req.body.priceMin, $lte: req.body.priceMax } })
+        const wine = await Wine.find({
+            price: {
+                $gte: req.body.priceMin,
+                $lte: req.body.priceMax
+            }
+        })
         if (wine.length != 0) {
             res.status(200)
             res.json(wine)
         } else {
             res.status(204)
-            res.json({ message: 'Não existe vinho nesse valor' })
+            res.json({
+                message: 'Não existe vinho nesse valor'
+            })
         }
 
     } catch (err) {
         res.status(204)
-        res.json({ message: 'Não existe vinho nesse valor' })
+        res.json({
+            message: 'Não existe vinho nesse valor'
+        })
     }
 })
 
